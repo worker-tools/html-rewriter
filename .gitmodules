@@ -1,0 +1,3 @@
+[submodule "html-rewriter-wasm"]
+	path = html-rewriter-wasm
+	url = git@github.com:worker-tools/html-rewriter-wasm.git

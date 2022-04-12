@@ -1,0 +1,10 @@
+node_modules
+cjs
+dist
+*.tgz
+/*.d.ts
+/*.js
+/*.js.map
+/*.d.ts.map
+import-map.json
+._git
