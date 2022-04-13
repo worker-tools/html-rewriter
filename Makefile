@@ -1,5 +1,5 @@
 PACKAGE_NAME := $(shell basename $(shell pwd))
-# PACKAGE_VERSION := $(shell git describe --tags --abbrev=0)
+PACKAGE_VERSION := $(shell git describe --tags --abbrev=0)
 
 mk-wasm:
 	cd ./html-rewriter-wasm; make dist
