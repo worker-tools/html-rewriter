@@ -25,11 +25,13 @@ import {
   HTMLRewriter 
 } from 'https://ghuc.cc/worker-tools/html-rewriter/html-rewriter.ts'
 
-new HTMLRewriter() // this will trigger WASM fetch/decoding
-  .on('p', { 
-    element() { } 
+new HTMLRewriter()
+  .on("p", {
+    element(element) { 
+      element.tagName = "h1" 
+    },
   })
-  .transform(new Response())
+  .transform(new Response('<p class="red">test</p>'))
   .text().then(x => console.log(x))
 ```
 
