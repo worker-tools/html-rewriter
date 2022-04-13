@@ -31,16 +31,7 @@ export type {
 }
 
 import * as base64 from "https://deno.land/std@0.134.0/encoding/base64.ts"
-import { concat } from 'https://deno.land/std@0.134.0/bytes/mod.ts'
 import { ResolvablePromise } from 'https://ghuc.cc/worker-tools/resolvable-promise/index.ts'
-
-const bufferStream = async (stream: ReadableStream<Uint8Array>) => {
-  const reader = stream.getReader();
-  const chunks: Uint8Array[] = []; 
-  let result: any;
-  while (!(result = await reader.read()).done) chunks.push(result.value)
-  return concat(...chunks);
-}
 
 type SelectorElementHandlers = [selector: string, handlers: ElementHandlers];
 
@@ -65,8 +56,11 @@ export class HTMLRewriter {
             ? (await import('https://cdn.skypack.dev/@stardazed/streams-compression@1.0.0')).DecompressionStream
             : (<any>globalThis).DecompressionStream;
           await initWASM(
-            bufferStream(new Response(base64.decode(WASM.code!)).body!.pipeThrough(new DecompressionStream('gzip')))
-          )
+            new Response(
+              new Response(base64.decode(WASM.code!)).body!.pipeThrough(new DecompressionStream('gzip')),
+              { headers: { 'content-type': 'application/wasm' } },
+            ),
+          );
           initialized.resolve();
           delete WASM.code;
         } catch (err) {
