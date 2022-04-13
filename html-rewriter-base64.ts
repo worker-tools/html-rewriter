@@ -1,4 +1,3 @@
-// deno-lint-ignore-file no-explicit-any no-cond-assign
 // FIXME: replace multiple 1 import from skypack!?
 import type {
   HTMLRewriter as BaseHTMLRewriter,

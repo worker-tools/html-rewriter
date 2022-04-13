@@ -81,9 +81,8 @@ e.waitUntil(patch('./npm/src/html-rewriter.ts', './patches/html-rewriter.ts.patc
 e.waitUntil(patch('./npm/src/html-rewriter-base64.ts', './patches/html-rewriter-base64.ts.patch'))
 e.waitUntil(patch('./npm/src/html-rewriter-base64-gzip.ts', './patches/html-rewriter-base64.ts.patch'))
 
+await e;
+
 for await (const f of Deno.readDir('./npm/src')) 
   if (extname(f.name) === '.orig') 
     await Deno.remove(resolve('./npm/src', f.name))
-
-await e;
-
