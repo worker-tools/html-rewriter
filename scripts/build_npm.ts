@@ -16,7 +16,7 @@ const patch = async (file: string, patch: string) => {
   await p.status();
 }
 
-await emptyDir("./npm/vendor");
+await emptyDir("./npm");
 
 const name = basename(Deno.cwd())
 
@@ -24,9 +24,6 @@ await build({
   entryPoints: ["./html-rewriter.ts", {
     name: './html-rewriter-base64',
     path: './html-rewriter-base64.ts'
-  }, {
-    name: './html-rewriter-base64-gzip',
-    path: './html-rewriter-base64-gzip.ts'
   }],
   outDir: "./npm",
   shims: {},
@@ -79,7 +76,6 @@ e.waitUntil(Deno.copyFile('./vendor/html_rewriter_bg.wasm', './npm/src/vendor/ht
 
 e.waitUntil(patch('./npm/src/html-rewriter.ts', './patches/html-rewriter.ts.patch'))
 e.waitUntil(patch('./npm/src/html-rewriter-base64.ts', './patches/html-rewriter-base64.ts.patch'))
-e.waitUntil(patch('./npm/src/html-rewriter-base64-gzip.ts', './patches/html-rewriter-base64.ts.patch'))
 
 await e;
 

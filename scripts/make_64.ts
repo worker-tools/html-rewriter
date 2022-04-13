@@ -11,20 +11,15 @@ const bufferStream = async (s: ReadableStream<Uint8Array>) => {
   return concat(...chunks);
 }
 
-const fold = (w: number, s: string) => s.match(new RegExp(`.{1,${w}}`, 'g'))!.join('\n')
+const fold = (w: number) => (s: string) => s.match(new RegExp(`.{1,${w}}`, 'g'))!.join('\n')
 
-const [wasm, target, target_gzip] = await Promise.all([
+const [wasm, target] = await Promise.all([
   Deno.open('./vendor/html_rewriter_bg.wasm'),
   Deno.readTextFile('./html-rewriter-base64.ts'),
-  Deno.readTextFile('./html-rewriter-base64-gzip.ts'),
 ]);
 
-const [a, b] = wasm.readable.tee()
-const bytes = await bufferStream(a);
-const bytes_gzip = await bufferStream(b.pipeThrough(new CompressionStream('gzip')))
+const bytes_gzip = await bufferStream(wasm.readable.pipeThrough(new CompressionStream('gzip')))
 
-const content = target.replace(regex, fold(120, base64.encode(bytes)));
-const content_gzip = target_gzip.replace(regex, fold(120, base64.encode(bytes_gzip)));
+const content_gzip = target.replace(regex, fold(120)(base64.encode(bytes_gzip)));
 
-await Deno.writeTextFile('./html-rewriter-base64.ts', content);
-await Deno.writeTextFile('./html-rewriter-base64-gzip.ts', content_gzip);
+await Deno.writeTextFile('./html-rewriter-base64.ts', content_gzip);
