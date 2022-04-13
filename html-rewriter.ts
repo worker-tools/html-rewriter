@@ -13,7 +13,7 @@ type SelectorElementHandlers = [selector: string, handlers: ElementHandlers];
 const kEnableEsiTags = Symbol("kEnableEsiTags");
 
 const toWASMResponse = (response: Response) => {
-  if (response.headers.get('content-type') === 'application/wasm') return response;
+  if (response.headers.get('content-type')?.startsWith('application/wasm')) return response;
   const { body, headers: hs, ...props } = response
   const headers = new Headers(hs)
   headers.set('content-type', 'application/wasm')
@@ -58,7 +58,7 @@ export class HTMLRewriter {
         // will also synchronously compile a WebAssembly module, so delay doing
         // this until we really need it.
         if (!initialized) {
-          await initWASM(fetch(new URL("./vendor/html_rewriter_bg.wasm", import.meta.url)).then(toWASMResponse))
+          await initWASM(fetch(new URL("./vendor/html_rewriter_bg.wasm", import.meta.url).href).then(toWASMResponse))
           initialized = true;
         }
         rewriter = new module.HTMLRewriter(

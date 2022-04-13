@@ -13,7 +13,16 @@ await emptyDir("./npm");
 const name = basename(Deno.cwd())
 
 await build({
-  entryPoints: ["./index.ts"],
+  entryPoints: ["./html-rewriter.ts", {
+    name: './html-rewriter-64',
+    path: './html-rewriter-64.ts'
+  }, {
+    name: './polyfill',
+    path: './polyfill.ts'
+  }, {
+    name: './polyfill-64',
+    path: './polyfill-64.ts'
+  }],
   outDir: "./npm",
   shims: {},
   test: false,
@@ -23,7 +32,7 @@ await build({
     name: `@worker-tools/${name}`,
     version: await latestVersion(),
     description: await getDescription(),
-    license: await getGHLicense(name) ?? 'MIT',
+    license: await getGHLicense(name).catch(() => null) ?? 'MIT',
     publishConfig: {
       access: "public"
     },
@@ -35,8 +44,8 @@ await build({
     bugs: {
       url: `https://github.com/worker-tools/${name}/issues`,
     },
-    homepage: await getGHHomepage(name) ?? `https://github.com/worker-tools/${name}#readme`,
-    keywords: await getGHTopics(name) ?? [],
+    homepage: await getGHHomepage(name).catch(() => null) ?? `https://github.com/worker-tools/${name}#readme`,
+    keywords: await getGHTopics(name).catch(() => null) ?? [],
   },
   packageManager: 'pnpm',
   compilerOptions: {
@@ -59,6 +68,12 @@ await build({
   //   },
   // },
 });
+
+await Promise.all([
+  Deno.copyFile('./vendor/html_rewriter_bg.wasm', './npm/esm/vendor/html_rewriter_bg.wasm'),
+  Deno.copyFile('./vendor/html_rewriter_bg.wasm', './npm/script/vendor/html_rewriter_bg.wasm'),
+  Deno.copyFile('./vendor/html_rewriter_bg.wasm', './npm/src/vendor/html_rewriter_bg.wasm'),
+]);
 
 // post build steps
 await copyMdFiles()

@@ -1,15 +1,17 @@
 PACKAGE_NAME := $(shell basename $(shell pwd))
-PACKAGE_VERSION := $(shell git describe --tags --abbrev=0)
+# PACKAGE_VERSION := $(shell git describe --tags --abbrev=0)
 
-wasm:
+mk-wasm:
 	cd ./html-rewriter-wasm; make dist
 
-postinstall: wasm
-	cp ./html-rewriter-wasm/html_rewriter* ./vendor/wasm 
-	cp ./html-rewriter-wasm/asyncify.js ./vendor/wasm
+cp-wasm: mk-wasm
+	cp ./html-rewriter-wasm/html_rewriter* ./vendor 
+	cp ./html-rewriter-wasm/asyncify.js ./vendor
 
-base64: postinstall
-	./bin/make-64.ts
+base64: cp-wasm
+	./scripts/make_64.ts
 
-# base128:
-# 	./bin/base128.ts ./src/html_rewriter_bg.wasm | ./bin/into.ts 'FOOBAR' ./src/html-rewriter-128.ts
+dist: base64
+
+npm: dist
+	./scripts/build_npm.ts
