@@ -1,12 +1,33 @@
 // FIXME: replace multiple 1 import from skypack!?
 import type {
   HTMLRewriter as BaseHTMLRewriter,
-  DocumentHandlers,
+  ContentTypeOptions,
+  Element,
+  EndTag,
+  Comment,
+  TextChunk,
+  Doctype,
+  DocumentEnd,
   ElementHandlers,
+  DocumentHandlers,
+  HTMLRewriterOptions,
 } from "./vendor/html_rewriter.d.ts";
 import * as _module from './vendor/html_rewriter.js'
 const { default: initWASM } = _module;
 const module: typeof import("./vendor/html_rewriter.d.ts") = _module;
+
+export type { 
+  ContentTypeOptions,
+  Element,
+  EndTag,
+  Comment,
+  TextChunk,
+  Doctype,
+  DocumentEnd,
+  ElementHandlers,
+  DocumentHandlers,
+  HTMLRewriterOptions,
+}
 
 type SelectorElementHandlers = [selector: string, handlers: ElementHandlers];
 

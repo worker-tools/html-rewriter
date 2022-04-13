@@ -8,9 +8,11 @@ import {
   latestVersion, copyMdFiles, getDescription, getGHTopics, getGHLicense, getGHHomepage,
 } from 'https://gist.githubusercontent.com/qwtel/ecf0c3ba7069a127b3d144afc06952f5/raw/latest-version.ts'
 
-await emptyDir("./npm");
+await emptyDir("./npm/vendor");
 
 const name = basename(Deno.cwd())
+
+await Deno.copyFile('./vendor/html_rewriter_bg.wasm', './npm/vendor/html_rewriter_bg.wasm');
 
 await build({
   entryPoints: ["./html-rewriter.ts", {
@@ -46,34 +48,16 @@ await build({
     },
     homepage: await getGHHomepage(name).catch(() => null) ?? `https://github.com/worker-tools/${name}#readme`,
     keywords: await getGHTopics(name).catch(() => null) ?? [],
+    scripts: {
+      postinstall: "cp vendor/* esm/vendor && cp vendor/* script/vendor && cp vendor/* src/vendor",
+    },
   },
   packageManager: 'pnpm',
   compilerOptions: {
     sourceMap: true,
     target: 'ES2019',
   },
-  // mappings: {
-  //   "https://ghuc.cc/worker-tools/middleware@master/context.ts": {
-  //     name: "@worker-tools/middleware",
-  //     version: "latest",
-  //   },
-  //   "https://ghuc.cc/worker-tools/response-creators/index.ts": {
-  //     name: "@worker-tools/response-creators",
-  //     version: "latest",
-  //   },
-  //   "https://ghuc.cc/kenchris/urlpattern-polyfill@a076337/src/index.d.ts": {
-  //     name: "urlpattern-polyfill",
-  //     version: "^4.0.1",
-  //     subPath: 'dist/index.d.ts'
-  //   },
-  // },
 });
-
-await Promise.all([
-  Deno.copyFile('./vendor/html_rewriter_bg.wasm', './npm/esm/vendor/html_rewriter_bg.wasm'),
-  Deno.copyFile('./vendor/html_rewriter_bg.wasm', './npm/script/vendor/html_rewriter_bg.wasm'),
-  Deno.copyFile('./vendor/html_rewriter_bg.wasm', './npm/src/vendor/html_rewriter_bg.wasm'),
-]);
 
 // post build steps
 await copyMdFiles()
