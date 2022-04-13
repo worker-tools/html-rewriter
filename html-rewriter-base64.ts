@@ -1,3 +1,4 @@
+// deno-lint-ignore-file no-explicit-any no-cond-assign
 // FIXME: replace multiple 1 import from skypack!?
 import type {
   HTMLRewriter as BaseHTMLRewriter,
@@ -73,7 +74,7 @@ export class HTMLRewriter {
         // will also synchronously compile a WebAssembly module, so delay doing
         // this until we really need it.
         if (WASM.code) {
-          await initWASM(base64.decode(WASM.code))
+          await initWASM(base64.decode(WASM.code));
           delete WASM.code;
         }
         rewriter = new module.HTMLRewriter(

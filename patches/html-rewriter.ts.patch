@@ -1,0 +1,15 @@
+--- html-rewriter.ts	2022-04-13 13:17:49.000000000 +0700
++++ html-rewriter2.ts	2022-04-13 13:29:03.000000000 +0700
+@@ -13,10 +13,10 @@
+   ElementHandlers,
+   DocumentHandlers,
+   HTMLRewriterOptions,
+-} from "./vendor/html_rewriter.d.d.js";
++} from "./vendor/html_rewriter.d.js";
+ import * as _module from './vendor/html_rewriter.js'
+ const { default: initWASM } = _module;
+-const module: typeof import("./vendor/html_rewriter.d.ts") = _module;
++const module: typeof import("./vendor/html_rewriter.js") = _module;
+ 
+ export type { 
+   ContentTypeOptions,

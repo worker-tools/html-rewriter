@@ -1,0 +1,11 @@
+--- html-rewriter-base64.ts	2022-04-13 15:41:30.000000000 +0700
++++ html-rewriter-base64_x.ts	2022-04-13 15:43:07.000000000 +0700
+@@ -19,7 +19,7 @@
+ } from "./vendor/html_rewriter.d.d.js";
+ import * as _module from './vendor/html_rewriter.js'
+ const { default: initWASM } = _module;
+-const module: typeof import("./vendor/html_rewriter.d.ts") = _module;
++const module: typeof import("./vendor/html_rewriter.js") = _module;
+ 
+ export type { 
+   ContentTypeOptions,
