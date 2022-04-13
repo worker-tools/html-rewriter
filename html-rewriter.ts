@@ -29,10 +29,13 @@ export type {
   HTMLRewriterOptions,
 }
 
+import { ResolvablePromise } from 'https://ghuc.cc/worker-tools/resolvable-promise/index.ts'
+
 type SelectorElementHandlers = [selector: string, handlers: ElementHandlers];
 
 const kEnableEsiTags = Symbol("kEnableEsiTags");
 
+// In case a server doesn't return the proper mime type (e.g. githubusercontent.com)..
 const toWASMResponse = (response: Response) => {
   if (response.headers.get('content-type')?.startsWith('application/wasm')) return response;
   const { body, headers: hs, ...props } = response
@@ -41,12 +44,28 @@ const toWASMResponse = (response: Response) => {
   return new Response(body, { ...props, headers })
 }
 
-let initialized = false;
+const initialized = new ResolvablePromise<void>();
+let executing = false;
 
 export class HTMLRewriter {
   readonly #elementHandlers: SelectorElementHandlers[] = [];
   readonly #documentHandlers: DocumentHandlers[] = [];
   [kEnableEsiTags] = false;
+
+  constructor() {
+    if (!initialized.settled && !executing) {
+      executing = true;
+      fetch(new URL("./vendor/html_rewriter_bg.wasm", import.meta.url).href)
+        .then(r => r.ok ? r : (() => { throw Error('WASM response not ok') })())
+        .then(toWASMResponse)
+        .then(initWASM)
+        .then(() => initialized.resolve())
+        .catch(err => { 
+          executing = false; 
+          console.error(err);
+        })
+    }
+  }
 
   on(selector: string, handlers: ElementHandlers): this {
     this.#elementHandlers.push([selector, handlers]);
@@ -75,13 +94,8 @@ export class HTMLRewriter {
       start: async (controller) => {
         // Create a rewriter instance for this transformation that writes its
         // output to the transformed response's stream. Note that each
-        // BaseHTMLRewriter can only be used once. Importing html-rewriter-wasm
-        // will also synchronously compile a WebAssembly module, so delay doing
-        // this until we really need it.
-        if (!initialized) {
-          await initWASM(fetch(new URL("./vendor/html_rewriter_bg.wasm", import.meta.url).href).then(toWASMResponse))
-          initialized = true;
-        }
+        // BaseHTMLRewriter can only be used once. 
+        await initialized;
         rewriter = new module.HTMLRewriter(
           (output) => {
             // enqueue will throw on empty chunks

@@ -32,6 +32,7 @@ export type {
 
 import * as base64 from "https://deno.land/std@0.134.0/encoding/base64.ts"
 import { concat } from 'https://deno.land/std@0.134.0/bytes/mod.ts'
+import { ResolvablePromise } from 'https://ghuc.cc/worker-tools/resolvable-promise/index.ts'
 
 const bufferStream = async (stream: ReadableStream<Uint8Array>) => {
   const reader = stream.getReader();
@@ -47,10 +48,34 @@ const kEnableEsiTags = Symbol("kEnableEsiTags");
 
 const WASM: { code?: string } = {}
 
+const initialized = new ResolvablePromise<void>();
+let executing = false;
+
 export class HTMLRewriter {
   readonly #elementHandlers: SelectorElementHandlers[] = [];
   readonly #documentHandlers: DocumentHandlers[] = [];
   [kEnableEsiTags] = false;
+
+  constructor() {
+    if (WASM.code && !executing) {
+      executing = true;
+      (async () => {
+        try {
+          const DecompressionStream  = !('DecompressionStream' in globalThis) 
+            ? (await import('https://cdn.skypack.dev/@stardazed/streams-compression@1.0.0')).DecompressionStream
+            : (<any>globalThis).DecompressionStream;
+          await initWASM(
+            bufferStream(new Response(base64.decode(WASM.code!)).body!.pipeThrough(new DecompressionStream('gzip')))
+          )
+          initialized.resolve();
+          delete WASM.code;
+        } catch (err) {
+          executing = false;
+          console.error(err);
+        }
+      })();
+    }
+  }
 
   on(selector: string, handlers: ElementHandlers): this {
     this.#elementHandlers.push([selector, handlers]);
@@ -79,18 +104,8 @@ export class HTMLRewriter {
       start: async (controller) => {
         // Create a rewriter instance for this transformation that writes its
         // output to the transformed response's stream. Note that each
-        // BaseHTMLRewriter can only be used once. Importing html-rewriter-wasm
-        // will also synchronously compile a WebAssembly module, so delay doing
-        // this until we really need it.
-        if (WASM.code) {
-          const DecompressionStream  = !('DecompressionStream' in globalThis) 
-            ? (await import('https://cdn.skypack.dev/@stardazed/streams-compression@1.0.0')).DecompressionStream
-            : (<any>globalThis).DecompressionStream;
-          await initWASM(
-            bufferStream(new Response(base64.decode(WASM.code!)).body!.pipeThrough(new DecompressionStream('gzip')))
-          )
-          delete WASM.code;
-        }
+        // BaseHTMLRewriter can only be used once. 
+        await initialized;
         rewriter = new module.HTMLRewriter(
           (output) => {
             // enqueue will throw on empty chunks
