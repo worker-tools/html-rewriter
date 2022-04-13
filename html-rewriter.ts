@@ -115,22 +115,6 @@ export class HTMLRewriter {
   }
 }
 
-// queueMicrotask(async () => {
-//   console.log(await new HTMLRewriter()
-//     .on("p", {
-//       element(element) { element.tagName = "h1" },
-//     })
-//     .transform(new Response('<p class="red">test</p>'))
-//     .text())
-
-//   console.log(await new HTMLRewriter()
-//     .on("p", {
-//       element(element) { element.tagName = "h2" },
-//     })
-//     .transform(new Response('<p class="red">test</p>'))
-//     .text())
-// })
-
 export function withEnableEsiTags(rewriter: HTMLRewriter): HTMLRewriter {
   rewriter[kEnableEsiTags] = true;
   return rewriter;

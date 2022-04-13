@@ -114,22 +114,6 @@ export function withEnableEsiTags(rewriter: HTMLRewriter): HTMLRewriter {
   return rewriter;
 }
 
-// queueMicrotask(async () => {
-//   console.log(await new HTMLRewriter()
-//     .on("p", {
-//       element(element) { element.tagName = "h1" },
-//     })
-//     .transform(new Response('<p class="red">test</p>'))
-//     .text())
-
-//   console.log(await new HTMLRewriter()
-//     .on("p", {
-//       element(element) { element.tagName = "h2" },
-//     })
-//     .transform(new Response('<p class="red">test</p>'))
-//     .text())
-// })
-
 WASM.code = `
 AGFzbQEAAAAB8wEhYAR/f39/AGADf39/AGADf39/AX9gAX8AYAJ/fwBgAn9/AX9gAX8Bf2AGf39/f39/AGAFf39/f38AYAd/f39/f39/AGAFf39/f38Bf2AA
 AGAAAX9gAX8BfmAEf39/fwF/YAN/f38BfmAEf39+fgBgBn9/f39/fwF/YAh/f39/f39/fwBgA399fwF/YAl/f39/f39/f38AYAl/f39/f39+fn4AYAV/f31/
