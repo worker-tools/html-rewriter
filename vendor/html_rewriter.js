@@ -819,7 +819,7 @@ async function load(module, imports) {
 
 async function init(input) {
     if (typeof input === 'undefined') {
-        input = new URL('html_rewriter_bg.wasm', import.meta.url);
+        throw new Error('Initializing html_rewriter needs input')
     }
     const imports = {};
     imports.wbg = {};
