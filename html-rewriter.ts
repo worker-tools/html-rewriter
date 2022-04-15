@@ -12,9 +12,9 @@ import type {
   DocumentHandlers,
   HTMLRewriterOptions,
 } from "./vendor/html_rewriter.d.ts";
-import * as _module from './vendor/html_rewriter.js'
-const { default: initWASM } = _module;
-const module: typeof import("./vendor/html_rewriter.d.ts") = _module;
+import * as _base from './vendor/html_rewriter.js'
+const { default: initWASM } = _base;
+const base: typeof import("./vendor/html_rewriter.d.ts") = _base;
 
 export type { 
   ContentTypeOptions,
@@ -96,7 +96,7 @@ export class HTMLRewriter {
         // output to the transformed response's stream. Note that each
         // BaseHTMLRewriter can only be used once. 
         await initialized;
-        rewriter = new module.HTMLRewriter(
+        rewriter = new base.HTMLRewriter(
           (output) => {
             // enqueue will throw on empty chunks
             if (output.length !== 0) controller.enqueue(output);
