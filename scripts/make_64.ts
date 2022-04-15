@@ -15,11 +15,11 @@ const fold = (w: number) => (s: string) => s.match(new RegExp(`.{1,${w}}`, 'g'))
 
 const [wasm, target] = await Promise.all([
   Deno.open('./vendor/html_rewriter_bg.wasm'),
-  Deno.readTextFile('./html-rewriter-base64.ts'),
+  Deno.readTextFile('./base64.ts'),
 ]);
 
 const bytes_gzip = await bufferStream(wasm.readable.pipeThrough(new CompressionStream('gzip')))
 
 const content_gzip = target.replace(regex, fold(120)(base64.encode(bytes_gzip)));
 
-await Deno.writeTextFile('./html-rewriter-base64.ts', content_gzip);
+await Deno.writeTextFile('./base64.ts', content_gzip);

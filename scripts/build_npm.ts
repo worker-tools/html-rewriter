@@ -21,12 +21,9 @@ await emptyDir("./npm");
 const name = basename(Deno.cwd())
 
 await build({
-  entryPoints: ["./html-rewriter.ts", {
-    name: './html-rewriter-base64',
-    path: './html-rewriter-base64.ts'
-  }, {
-    name: './html-rewriter',
-    path: './html-rewriter.ts'
+  entryPoints: ["./index.ts", {
+    name: './base64',
+    path: './base64.ts'
   }],
   outDir: "./npm",
   shims: {},
@@ -69,18 +66,18 @@ await build({
 });
 
 // post build steps
-const e = new ExtendablePromise()
+const ext = new ExtendablePromise()
 
-e.waitUntil(copyMdFiles());
+ext.waitUntil(copyMdFiles());
 
-e.waitUntil(Deno.copyFile('./vendor/html_rewriter_bg.wasm', './npm/esm/vendor/html_rewriter_bg.wasm'))
-e.waitUntil(Deno.copyFile('./vendor/html_rewriter_bg.wasm', './npm/scripts/vendor/html_rewriter_bg.wasm'))
-e.waitUntil(Deno.copyFile('./vendor/html_rewriter_bg.wasm', './npm/src/vendor/html_rewriter_bg.wasm'))
+ext.waitUntil(Deno.copyFile('./vendor/html_rewriter_bg.wasm', './npm/esm/vendor/html_rewriter_bg.wasm'))
+ext.waitUntil(Deno.copyFile('./vendor/html_rewriter_bg.wasm', './npm/scripts/vendor/html_rewriter_bg.wasm'))
+ext.waitUntil(Deno.copyFile('./vendor/html_rewriter_bg.wasm', './npm/src/vendor/html_rewriter_bg.wasm'))
 
-e.waitUntil(patch('./npm/src/html-rewriter.ts', './patches/html-rewriter.ts.patch'))
-e.waitUntil(patch('./npm/src/html-rewriter-base64.ts', './patches/html-rewriter-base64.ts.patch'))
+ext.waitUntil(patch('./npm/src/index.ts', './patches/index.ts.patch'))
+ext.waitUntil(patch('./npm/src/base64.ts', './patches/base64.ts.patch'))
 
-await e;
+await ext;
 
 for await (const f of Deno.readDir('./npm/src')) 
   if (extname(f.name) === '.orig') 

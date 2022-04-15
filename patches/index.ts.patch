@@ -1,0 +1,11 @@
+--- index.ts	2022-04-15 12:14:19.000000000 +0700
++++ index_x.ts	2022-04-15 12:15:20.000000000 +0700
+@@ -16,7 +16,7 @@
+ } from "./vendor/html_rewriter.d.d.js";
+ import * as _base from './vendor/html_rewriter.js'
+ const { default: initWASM } = _base;
+-const base: typeof import("./vendor/html_rewriter.d.ts") = _base;
++const base: typeof import("./vendor/html_rewriter.js") = _base;
+ 
+ export type { 
+   ContentTypeOptions,
