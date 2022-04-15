@@ -2,7 +2,7 @@
 
 WASM-based implementation of Cloudflare's HTML Rewriter for use in Deno, browsers, etc. 
 
-It uses `lol-html` under the hood, the same implementation used by Cloudflare Workers and is based on [Miniflare's implementation](https://github.com/mrbbot/html-rewriter-wasm).
+It uses `lol-html` under the hood, the same implementation used by Cloudflare Workers. It is based on [Miniflare's WASM build](https://github.com/mrbbot/html-rewriter-wasm).
 
 ## Installation
 This package includes 2 versions of HTML Rewriter. 
@@ -12,8 +12,7 @@ However, if you are using this version with other tooling, depending on the bund
 
 [`base64.ts`](./base64.ts) has the required WASM inlined as compressed base64. The total size is 447K (345K gzipped). 
 This ensures that HTML Rewriter is working properly when bundled, offline, etc. 
-Generally this is the "safer" version, but the "hackyness" of ~400K of inlined WASM and relying on [`DecompressionStream`][dcs] is significant (without compression, the file size would be 1.2MB).
-It is however quite awesome that it works.
+The "hackyness" of ~400K of inlined WASM and relying on [`DecompressionStream`][dcs] is significant (without compression, the file size would be 1.2MB), but its simplicity makes it easier to get it to work with various bundlers (including Deno's own, as of this writing).
 
 [dcs]: https://developer.mozilla.org/en-US/docs/Web/API/DecompressionStream
 
@@ -26,12 +25,13 @@ npm install @worker-tools/html-rewriter
 
 Which version of HTML Rewriter to pick depends on which bundler you are using:
 
-For **Webpack 4**, it's best to use the non-ESM base64 version via its full path: `@worker-tools/html-rewriter/script/base64`.
+For **Webpack 4**, it's best to use the non-ESM base64 version via its full path: `@worker-tools/html-rewriter/script/base64`. 
 
 **Webpack 5** treats the regular version correctly by default, which can be imported as `@worker-tools/html-rewriter`. 
 
 For **esbuild** it's best to use the base64-version via `@worker-tools/html-rewriter/base64`. 
-There might be a plugin that treats the WASM-version correctly.
+
+You can explore the full contents of the npm package [here](https://unpkg.com/browse/@worker-tools/html-rewriter/).
 
 ## Usage
 

@@ -12,7 +12,7 @@ import {
 } from 'https://deno.land/std@0.133.0/testing/asserts.ts'
 const { test } = Deno;
 
-import { HTMLRewriter, Element } from "../html-rewriter-base64.ts";
+import { HTMLRewriter, Element } from "../base64.ts";
 
 export const timeout = (t: number) => new Promise(r => setTimeout(r, t));
 
