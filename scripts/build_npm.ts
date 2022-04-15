@@ -24,6 +24,9 @@ await build({
   entryPoints: ["./html-rewriter.ts", {
     name: './html-rewriter-base64',
     path: './html-rewriter-base64.ts'
+  }, {
+    name: './html-rewriter',
+    path: './html-rewriter.ts'
   }],
   outDir: "./npm",
   shims: {},
