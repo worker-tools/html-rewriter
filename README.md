@@ -7,10 +7,10 @@ It uses `lol-html` under the hood, the same implementation used by Cloudflare Wo
 ## Installation
 This package includes 2 versions of HTML Rewriter. 
 
-[`index.ts`](./index.ts) loads the WASM that is co-located with this module via fetch and (streaming-) instantiates the module that way. In Deno, this works via file system (if you've downloaded the module) and web (when loading from deno.land/x or even githubusercontent.com). 
+`index.ts` loads the WASM that is co-located with this module via fetch and (streaming-) instantiates the module that way. In Deno, this works via file system (if you've downloaded the module) and web (when loading from deno.land/x or even githubusercontent.com). 
 However, if you are using this version with other tooling, depending on the bundler and configuration the WASM source may or may not be included...
 
-[`base64.ts`](./base64.ts) has the required WASM inlined as compressed base64. The total size is 447K (345K gzipped). 
+`base64.ts` has the required WASM inlined as compressed base64. The total size is 447K (345K gzipped). 
 This ensures that HTML Rewriter is working properly when bundled, offline, etc. 
 The "hackyness" of ~400K of inlined WASM and relying on [`DecompressionStream`][dcs] is significant (without compression, the file size would be 1.2MB), but its simplicity makes it easier to get it to work with various bundlers (including Deno's own, as of this writing).
 

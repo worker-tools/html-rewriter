@@ -57,6 +57,10 @@ await build({
       name: '@stardazed/streams-compression',
       version: '^1.0.0',
     },
+    'https://ghuc.cc/worker-tools/resolvable-promise/index.ts': {
+      name: '@worker-tools/resolvable-promise',
+      version: 'latest',
+    },
   },
   packageManager: 'pnpm',
   compilerOptions: {
