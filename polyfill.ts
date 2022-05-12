@@ -2,12 +2,12 @@ import { HTMLRewriter as HTMLRewriterImpl } from './index.ts'
 import type * as types from './index.ts'
 
 declare global {
-  const HTMLRewriter: typeof HTMLRewriterImpl
+  class HTMLRewriter extends types.HTMLRewriter {}
   interface Window {
-    HTMLRewriter: typeof HTMLRewriterImpl;
+    HTMLRewriter: HTMLRewriter;
   }
   interface WorkerGlobalScope {
-    HTMLRewriter: typeof HTMLRewriterImpl;
+    HTMLRewriter: HTMLRewriter;
   }
   type ContentTypeOptions = types.ContentTypeOptions;
   type Element = types.Element;
