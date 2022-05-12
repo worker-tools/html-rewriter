@@ -20,7 +20,14 @@ declare global {
   type DocumentHandlers = types.DocumentHandlers;
 }
 
-self.HTMLRewriter = HTMLRewriterImpl;
+if (!('HTMLRewriter' in self)) {
+  Object.defineProperty(self, 'HTMLRewriter', {
+    value: HTMLRewriterImpl,
+    writable: false,
+    enumerable: false,
+    configurable: false,
+  })
+}
 
 // Trigger WASM initialization
 new HTMLRewriterImpl()
