@@ -1,4 +1,3 @@
-// deno-lint-ignore-file no-explicit-any
 // FIXME: replace multiple 1 import from skypack!?
 import type {
   HTMLRewriter as BaseHTMLRewriter,
@@ -11,7 +10,6 @@ import type {
   DocumentEnd,
   ElementHandlers,
   DocumentHandlers,
-  HTMLRewriterOptions,
 } from "./vendor/html_rewriter.d.ts";
 import * as _base from './vendor/html_rewriter.js'
 const { default: initWASM } = _base;
@@ -27,7 +25,6 @@ export type {
   DocumentEnd,
   ElementHandlers,
   DocumentHandlers,
-  HTMLRewriterOptions,
 }
 
 import * as base64 from "https://deno.land/std@0.134.0/encoding/base64.ts"

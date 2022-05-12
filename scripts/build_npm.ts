@@ -24,6 +24,12 @@ await build({
   entryPoints: ["./index.ts", {
     name: './base64',
     path: './base64.ts'
+  }, {
+    name: './polyfill',
+    path: './polyfill.ts'
+  }, {
+    name: './polyfill-base64',
+    path: './polyfill-base64.ts'
   }],
   outDir: "./npm",
   shims: {},

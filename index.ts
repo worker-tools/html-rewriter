@@ -10,7 +10,6 @@ import type {
   DocumentEnd,
   ElementHandlers,
   DocumentHandlers,
-  HTMLRewriterOptions,
 } from "./vendor/html_rewriter.d.ts";
 import * as _base from './vendor/html_rewriter.js'
 const { default: initWASM } = _base;
@@ -26,7 +25,6 @@ export type {
   DocumentEnd,
   ElementHandlers,
   DocumentHandlers,
-  HTMLRewriterOptions,
 }
 
 import { ResolvablePromise } from 'https://ghuc.cc/worker-tools/resolvable-promise/index.ts'
