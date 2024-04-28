@@ -823,6 +823,13 @@ async function init(input) {
     }
     const imports = {};
     imports.wbg = {};
+    imports.wbg.__wbg_endtag_new = function(arg0) {
+        var ret = EndTag.__wrap(arg0);
+        return addHeapObject(ret);
+    };
+    imports.wbg.__wbg_awaitPromise_39a1101fd8518869 = function(arg0, arg1) {
+        awaitPromise(arg0, getObject(arg1));
+    };
     imports.wbg.__wbindgen_object_drop_ref = function(arg0) {
         takeObject(arg0);
     };
@@ -837,9 +844,6 @@ async function init(input) {
     imports.wbg.__wbg_documentend_new = function(arg0) {
         var ret = DocumentEnd.__wrap(arg0);
         return addHeapObject(ret);
-    };
-    imports.wbg.__wbg_awaitPromise_39a1101fd8518869 = function(arg0, arg1) {
-        awaitPromise(arg0, getObject(arg1));
     };
     imports.wbg.__wbindgen_object_clone_ref = function(arg0) {
         var ret = getObject(arg0);
@@ -887,10 +891,6 @@ async function init(input) {
     };
     imports.wbg.__wbg_doctype_new = function(arg0) {
         var ret = Doctype.__wrap(arg0);
-        return addHeapObject(ret);
-    };
-    imports.wbg.__wbg_endtag_new = function(arg0) {
-        var ret = EndTag.__wrap(arg0);
         return addHeapObject(ret);
     };
     imports.wbg.__wbg_enableEsiTags_de6b91cc61a25874 = function(arg0) {
