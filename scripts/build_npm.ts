@@ -29,11 +29,12 @@ await build({
   test: false,
   typeCheck: false,
   package: await mkPackage(name),
-  declaration: true,
+  declaration: "separate",
   packageManager: 'pnpm',
   compilerOptions: {
     sourceMap: true,
-    target: 'ES2019',
+    target: 'ES2022',
+    lib: ["ES2022", "DOM"]
   },
   mappings: {
     'https://cdn.skypack.dev/@stardazed/streams-compression@1.0.0': {
@@ -62,11 +63,10 @@ ext.waitUntil(Deno.copyFile('./vendor/html_rewriter_bg.wasm', './npm/esm/vendor/
 ext.waitUntil(Deno.copyFile('./vendor/html_rewriter_bg.wasm', './npm/scripts/vendor/html_rewriter_bg.wasm'))
 ext.waitUntil(Deno.copyFile('./vendor/html_rewriter_bg.wasm', './npm/src/vendor/html_rewriter_bg.wasm'))
 
-ext.waitUntil(patch('./npm/src/index.ts', './patches/index.ts.patch'))
-ext.waitUntil(patch('./npm/src/base64.ts', './patches/base64.ts.patch'))
-
 await ext;
 
 for await (const f of Deno.readDir('./npm/src')) 
   if (extname(f.name) === '.orig') 
     await Deno.remove(resolve('./npm/src', f.name))
+
+console.log("Done.")
